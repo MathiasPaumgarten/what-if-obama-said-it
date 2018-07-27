@@ -1,0 +1,17 @@
+{
+    "name": "what-if-obama-said-it",
+    "private": true,
+    "version": "0.0.1",
+    "description": "Retweet headlines with Obama as the subject over Trump",
+    "scripts": {
+        "build": "tsc",
+        "start": "npm run build && node dist/index.js"
+    },
+    "devDependencies": {
+        "@types/node": "^10.5.3",
+        "typescript": "^2.9.2"
+    },
+    "dependencies": {
+        "twitter-js-client": "0.0.5"
+    }
+}
