@@ -5,16 +5,19 @@
     "description": "Retweet headlines with Obama as the subject over Trump",
     "scripts": {
         "build": "tsc",
-        "start": "npm run build && node dist/index.js"
+        "bootstrap": "npm run build && npm start",
+        "start": "node dist/index.js"
     },
     "devDependencies": {
+        "@types/express": "^4.16.0",
         "@types/lodash": "^4.14.114",
         "@types/node": "^10.5.3",
-        "rxjs": "^6.2.2",
         "typescript": "^2.9.2"
     },
     "dependencies": {
-        "lodash": "^4.17.10",
+        "express": "^4.16.3",
+        "pug": "^2.0.3",
+        "rxjs": "^6.2.2",
         "twitter-js-client": "0.0.5"
     }
 }
