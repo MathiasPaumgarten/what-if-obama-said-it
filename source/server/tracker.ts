@@ -34,7 +34,9 @@ export class Tracker {
         return this.cache.map( ( tweet: ExtendedTweet ) => tweet.updatedText );
     }
 
-    private onError( error: string ) {}
+    private onError( error: string ) {
+        console.warn( error );
+    }
 
     private onTweetReceived( value: string ) {
         const tweets = JSON.parse( value ) as Tweet[];

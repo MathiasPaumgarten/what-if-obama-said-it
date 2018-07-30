@@ -30,9 +30,15 @@ app.set( "views", process.cwd() + "/views" );
 
 app.use( express.static( "dist/client" ) );
 
-app.get( "/", ( _, response ) => {
+app.get( "/", ( _, response: express.Response ) => {
 
     response.render( "index", { lines: aggregator.getLines() } );
+
+} );
+
+app.get( "/api/list", ( _, response ) => {
+
+    response.send( JSON.stringify( aggregator.getLines() ) ).end();
 
 } );
 
