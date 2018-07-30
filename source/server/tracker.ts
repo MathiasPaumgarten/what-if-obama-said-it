@@ -3,14 +3,14 @@ import { Subject } from "rxjs";
 import { twitter } from "./twitter";
 
 interface Tweet {
-    created_at: string,
-    id: number,
-    id_str: string,
-    text: string,
+    created_at: string;
+    id: number;
+    id_str: string;
+    text: string;
 }
 
 interface ExtendedTweet extends Tweet {
-    updatedText: string,
+    updatedText: string;
 }
 
 export class Tracker {
@@ -26,7 +26,7 @@ export class Tracker {
         twitter.getUserTimeline(
             { screen_name: this.handle, count: "30" },
             error => this.onError( error ),
-            values => this.onTweetReceived( values )
+            values => this.onTweetReceived( values ),
         );
     }
 
@@ -56,8 +56,8 @@ export class Tracker {
         return {
             ...tweet,
             updatedText: tweet.text.replace( /[Dd]onald/g, "Barack" )
-                                   .replace( /[Tt]rump/g, "Obama" )
-        }
+                                   .replace( /[Tt]rump/g, "Obama" ),
+        };
     }
 
     private isNewTweet( tweet: Tweet ) {
@@ -70,3 +70,4 @@ export class Tracker {
         }
     }
 }
+
