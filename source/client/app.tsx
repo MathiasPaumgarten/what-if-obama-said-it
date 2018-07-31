@@ -1,5 +1,7 @@
 import * as React from "react";
 import { render } from "react-dom";
+
+import { Header } from "./components/header";
 import { Line } from "./components/line";
 
 interface AppState {
@@ -24,11 +26,14 @@ class App extends React.Component<{}, AppState> {
 
     render() {
         return (
-            <ul>
-                { this.state.lines.map( ( line: string, i: number ) => {
-                    return <Line text={ line } key={ i } />;
-                } ) }
-            </ul>
+            <div className="container">
+                <Header />
+                <ul>
+                    { this.state.lines.map( ( line: string, i: number ) => {
+                        return <Line text={ line } key={ i } />;
+                    } ) }
+                </ul>
+            </div>
         );
     }
 }

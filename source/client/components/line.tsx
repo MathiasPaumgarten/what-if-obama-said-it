@@ -7,7 +7,7 @@ interface LineProps {
 export class Line extends React.Component<LineProps, {}> {
     render() {
         return (
-            <li>{ this.props.text }</li>
+            <li className="line">{ this.props.text }</li>
         );
     }
 }

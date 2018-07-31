@@ -3,3 +3,5 @@
 .gitignore
 node_modules/
 source
+*.js.map
+styles/
