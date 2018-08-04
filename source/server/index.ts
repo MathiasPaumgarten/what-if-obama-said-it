@@ -2,6 +2,7 @@ import * as express from "express";
 
 import { Aggregator } from "./aggregator";
 
+const USE_FIXTURES = process.argv.indexOf( "-fixtures" ) > -1 || process.argv.indexOf( "--fixtures" ) > -1;
 const ONE_HOUR = 1000 * 60 * 60;
 const handles = [
     "CNNPolitics",
@@ -23,7 +24,7 @@ const handles = [
 ];
 
 const app = express();
-const aggregator = new Aggregator( handles, ONE_HOUR );
+const aggregator = new Aggregator( handles, ONE_HOUR, USE_FIXTURES );
 
 app.set( "view engine", "pug" );
 app.set( "views", process.cwd() + "/views" );

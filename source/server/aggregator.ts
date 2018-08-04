@@ -10,9 +10,9 @@ export class Aggregator {
     private timeout: NodeJS.Timer;
     private readonly SIZE = 30;
 
-    constructor( handles: string[], private updateTime: number ) {
+    constructor( handles: string[], private updateTime: number, useFixtures = false ) {
         this.trackers = handles.map( ( handle: string ) => {
-            return new Tracker( handle, this.SIZE );
+            return new Tracker( handle, this.SIZE, useFixtures );
         } );
 
         this.change = merge( ...this.trackers.map( t => t.change ) ).pipe( debounceTime( 1000 ) );

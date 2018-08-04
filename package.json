@@ -6,7 +6,7 @@
     "scripts": {
         "build": "tsc",
         "dev": "concurrently \"tsc -w\" \"watchify dist/client/app.js -o dist/client/bundle.js\" \"npm run less\"",
-        "server": "npm run build && npm start",
+        "server": "npm run build && node dist/server/index.js --fixtures",
         "start": "node dist/server/index.js",
         "less": "autoless styles/ dist/client/",
         "clean": "rm -rf dist"

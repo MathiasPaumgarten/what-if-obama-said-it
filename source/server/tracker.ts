@@ -1,3 +1,4 @@
+import { readFile } from "fs";
 import { Subject } from "rxjs";
 
 import { twitter } from "./twitter";
@@ -18,16 +19,27 @@ export class Tracker {
 
     private cache: ExtendedTweet[] = [];
 
-    constructor( private handle: string, private size: number ) {
+    constructor( private handle: string, private size: number, private useFixtures = false ) {
         this.update();
     }
 
     update() {
-        twitter.getUserTimeline(
-            { screen_name: this.handle, count: "30" },
-            error => this.onError( error ),
-            values => this.onTweetReceived( values ),
-        );
+        if ( this.useFixtures ) {
+            readFile(
+                process.cwd() + "/fixtures/" + this.handle + ".json",
+                { encoding: "utf-8" },
+                ( error , result: string ) => {
+                    if ( error ) this.onError( error.toString() );
+                    else this.onTweetReceived( result );
+                },
+            );
+        } else {
+            twitter.getUserTimeline(
+                { screen_name: this.handle, count: "30" },
+                error => this.onError( error ),
+                values => this.onTweetReceived( values ),
+            );
+        }
     }
 
     getLines(): string[] {
