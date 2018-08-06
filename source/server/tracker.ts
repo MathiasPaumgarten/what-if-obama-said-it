@@ -3,15 +3,19 @@ import { Subject } from "rxjs";
 
 import { twitter } from "./twitter";
 
-interface Tweet {
+/**
+ * Type information for the few fields we need returned from the Twitter API.
+ */
+export interface Tweet {
     created_at: string;
     id: number;
     id_str: string;
     text: string;
 }
 
-interface ExtendedTweet extends Tweet {
+export interface ExtendedTweet extends Tweet {
     updatedText: string;
+    handle: string;
 }
 
 export class Tracker {
@@ -56,7 +60,7 @@ export class Tracker {
     }
 
     getTweets(): ExtendedTweet[] {
-        return [];
+        return this.cache;
     }
 
     private onError( error: string ) {
@@ -85,11 +89,19 @@ export class Tracker {
         return !this.relatives.some( relative => text.indexOf( relative ) > -1 );
     }
 
+    /**
+     * Returns only a sub set of the entire object. We don't have a need to store a large amount of the information
+     * in the Twitter API. We leave most fields behind.
+     */
     private replaceTrump( tweet: Tweet ): ExtendedTweet {
         return {
-            ...tweet,
-            updatedText: tweet.text.replace( /[Dd]onald/g, "Barack" )
-                                   .replace( /[Tt]rump/g, "Obama" ),
+            created_at: tweet.created_at,
+            id: tweet.id,
+            id_str: tweet.id_str,
+            text: tweet.text,
+            handle: this.handle,
+            updatedText: tweet.text.replace( /[Dd]onald/g, "<first>Barack</first>" )
+                                   .replace( /[Tt]rump/g, "<last>Obama</last>" ),
         };
     }
 

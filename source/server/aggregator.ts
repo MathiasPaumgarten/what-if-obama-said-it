@@ -1,7 +1,7 @@
 import { merge, Observable } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 
-import { Tracker } from "./tracker";
+import { ExtendedTweet, Tracker } from "./tracker";
 
 export class Aggregator {
     readonly change: Observable<void>;
@@ -22,6 +22,10 @@ export class Aggregator {
 
     getLines(): string[] {
         return ([] as string[]).concat( ...this.trackers.map( t => t.getLines() ) );
+    }
+
+    getTweets(): ExtendedTweet[] {
+        return ([] as ExtendedTweet[]).concat( ...this.trackers.map( t => t.getTweets() ) );
     }
 
     update() {

@@ -43,4 +43,10 @@ app.get( "/api/list", ( _, response ) => {
 
 } );
 
+app.get( "/api/tweets", ( _, response ) => {
+
+    response.send( JSON.stringify( aggregator.getTweets() ) ).end();
+
+} );
+
 app.listen( process.env.PORT || 1234 );
