@@ -18,6 +18,15 @@ export class Tracker {
     change = new Subject<void>();
 
     private cache: ExtendedTweet[] = [];
+    private readonly relatives = [
+        "ivanka trump",
+        "donald trump jr",
+        "eric trump",
+        "tiffany trump",
+        "barron trump",
+        "melania trump",
+        "ivana trump",
+    ];
 
     constructor( private handle: string, private size: number, private useFixtures = false ) {
         this.update();
@@ -46,6 +55,10 @@ export class Tracker {
         return this.cache.map( ( tweet: ExtendedTweet ) => tweet.updatedText );
     }
 
+    getTweets(): ExtendedTweet[] {
+        return [];
+    }
+
     private onError( error: string ) {
         console.warn( error );
     }
@@ -54,7 +67,8 @@ export class Tracker {
         const tweets = JSON.parse( value ) as Tweet[];
 
         tweets.filter( tweet => this.isNewTweet( tweet ) )
-              .filter( tweet => this.hasTrump( tweet ) )
+              .filter( tweet => this.isTrump( tweet ) )
+              .filter( tweet => this.isDonald( tweet ) )
               .map( tweet => this.replaceTrump( tweet ) )
               .forEach( tweet => this.cache.unshift( tweet ) );
 
@@ -62,8 +76,13 @@ export class Tracker {
         this.change.next();
     }
 
-    private hasTrump( tweet: Tweet ): boolean {
+    private isTrump( tweet: Tweet ): boolean {
         return tweet.text.toLowerCase().indexOf( "trump" ) > -1;
+    }
+
+    private isDonald( tweet: Tweet ): boolean {
+        const text = tweet.text.toLowerCase();
+        return !this.relatives.some( relative => text.indexOf( relative ) > -1 );
     }
 
     private replaceTrump( tweet: Tweet ): ExtendedTweet {
