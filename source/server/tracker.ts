@@ -100,8 +100,8 @@ export class Tracker {
             id_str: tweet.id_str,
             text: tweet.text,
             handle: this.handle,
-            updatedText: tweet.text.replace( /[Dd]onald/g, "<first>Barack</first>" )
-                                   .replace( /[Tt]rump/g, "<last>Obama</last>" ),
+            updatedText: tweet.text.replace( /[Dd]onald/g, "Barack" )
+                                   .replace( /[Tt]rump/g, "Obama" ),
         };
     }
 

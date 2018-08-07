@@ -1,3 +1,4 @@
+import * as classname from "classnames";
 import * as React from "react";
 
 interface LineProps {
@@ -5,7 +6,7 @@ interface LineProps {
 }
 
 interface Fragment {
-    type: "text" | "url";
+    type: "text" | "url" | "cover";
     value: string;
 }
 
@@ -15,9 +16,14 @@ export class Line extends React.Component<LineProps, {}> {
             <li className="tweet">
                 <div className="tweet-text">
                     { this.disect( this.props.text ).map( ( fragment: Fragment, i: number ) => {
-                        return fragment.type === "url" ?
-                            <a key={ i } href={ fragment.value } target="_blank">{ fragment.value }</a> :
-                            <span key={ i }>{ fragment.value }</span>;
+                        switch ( fragment.type ) {
+                            case "url":
+                                return <a key={ i } href={ fragment.value } target="_blank">{ fragment.value }</a>;
+                            case "text":
+                                return <span key={ i }>{ fragment.value }</span>;
+                            case "cover":
+                                return <RevealFragment key={ i } value={ fragment.value } delay={ i } />;
+                        }
                     } ) }
                 </div>
             </li>
@@ -54,6 +60,25 @@ export class Line extends React.Component<LineProps, {}> {
                 start = index;
             }
 
+            [ "Barack", "Obama" ].forEach( name => {
+                if ( value.substr( index, name.length ) === name ) {
+                    if ( start !== index) {
+                        fragments.push( {
+                            type: "text",
+                            value: value.substring( start, index ),
+                        } );
+                    }
+
+                    fragments.push( {
+                        type: "cover",
+                        value: name,
+                    } );
+
+                    index += name.length;
+                    start = index;
+                }
+            } );
+
             index++;
         }
 
@@ -65,5 +90,35 @@ export class Line extends React.Component<LineProps, {}> {
         }
 
         return fragments;
+    }
+}
+
+interface RevealFramgmentProps {
+    value: string;
+    delay: number;
+}
+
+interface RevealFragmentState {
+    uiState: "before" | "idle";
+}
+
+export class RevealFragment extends React.Component<RevealFramgmentProps, RevealFragmentState> {
+    constructor( props: RevealFramgmentProps ) {
+        super( props );
+        this.state = { uiState: "before" };
+    }
+
+    componentDidMount() {
+        setTimeout( () => {
+            this.setState( { uiState: "idle" } );
+        }, 4000 );
+    }
+
+    render(): JSX.Element {
+        return (
+            <span className={ classname( "reveal", "delay-" + this.props.delay, this.state.uiState ) }>
+                { this.props.value }
+            </span>
+        );
     }
 }
