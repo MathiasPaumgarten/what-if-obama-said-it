@@ -15,11 +15,20 @@
     transition: transform 0.3s ease-in;
     width: 100%;
 
+    .breakpoint( 500px, {
+        font-size: 30px;
+        padding-left: 20px;
+    } );
+
     .line {
         display: inline-block;
         position: relative;
         line-height: 115%;
         margin-top: 30px;
+
+        .breakpoint( @small-size, {
+            margin-top: 15px;
+        } );
 
         &::before, &::after {
             content: " ";
@@ -37,6 +46,7 @@
 
         &::after {
             background-color: white;
+            outline: white;
         }
     }
 

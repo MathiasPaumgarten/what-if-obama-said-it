@@ -20,6 +20,8 @@ class App extends React.Component<{}, AppState> {
             lines: [],
             uiState: "before",
         };
+
+        window.onbeforeunload = () => window.scrollTo( 0, 0 );
     }
 
     componentDidMount() {
