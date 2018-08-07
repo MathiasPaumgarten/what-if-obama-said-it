@@ -62,27 +62,45 @@ header {
         line-height: 115%;
         margin-top: 30px;
 
-        &::after {
+        &::before, &::after {
             content: " ";
             width: 100%;
             height: 100%;
             background-color: black;
             top: 0;
-            left: 0;
+            right: 0;
             position: absolute;
+        }
+
+        &::before {
+            background-color: black;
+        }
+
+        &::after {
+            background-color: white;
         }
     }
 
+    // black cover
+    .line:first-child::before {
+        transition: width 0.3s ease-in-out 0.4s;
+    }
+
+    .line:last-child::before {
+        transition: width 0.4s ease-in-out 0.5s;
+    }
+
+    // reveal (white cover)
     .line:first-child::after {
-        transition: width 0.3s ease-in-out;
+        transition: width 0.2s ease-in-out 0s;
     }
 
     .line:last-child::after {
-        transition: width 0.4s ease-in-out 0.1s;
+        transition: width 0.3s ease-in-out 0.1s;
     }
 
     &.enter, &.idle {
-        .line::after {
+        .line::before, .line::after {
             width: 0;
         }
     }
