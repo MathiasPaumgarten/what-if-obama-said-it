@@ -1,0 +1,70 @@
+
+.intro {
+    align-items: flex-start;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    font-size: 70px;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    line-height: 150%;
+    padding-left: 100px;
+    position: fixed;
+    top: 0;
+    transition: transform 0.3s ease-in;
+    width: 100%;
+
+    .line {
+        display: inline-block;
+        position: relative;
+        line-height: 115%;
+        margin-top: 30px;
+
+        &::before, &::after {
+            content: " ";
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            top: 0;
+            right: 0;
+            position: absolute;
+        }
+
+        &::before {
+            background-color: black;
+        }
+
+        &::after {
+            background-color: white;
+        }
+    }
+
+    // black cover
+    .line:first-child::before {
+        transition: width 0.3s ease-in-out 0.4s;
+    }
+
+    .line:last-child::before {
+        transition: width 0.4s ease-in-out 0.5s;
+    }
+
+    // reveal (white cover)
+    .line:first-child::after {
+        transition: width 0.2s ease-in-out 0s;
+    }
+
+    .line:last-child::after {
+        transition: width 0.3s ease-in-out 0.1s;
+    }
+
+    &.enter, &.idle {
+        .line::before, .line::after {
+            width: 0;
+        }
+    }
+
+    &.idle {
+        transform: translate( 0, -100% );
+    }
+}

@@ -1,4 +1,5 @@
 @import "normalize.less";
+@import "mixins.less";
 
 html, body {
     margin: 0;
@@ -17,101 +18,6 @@ html, body {
     height: 100%;
 }
 
-// HEADER
-
-header {
-    background-color: white;
-    height: 100px;
-    left: 0;
-    padding: 50px 100px 0 100px;
-    position: fixed;
-    top: 0;
-    width: 100%;
-
-    .center {
-        align-items: center;
-        border-bottom: 1px solid black;
-        display: flex;
-        flex-direction: row;
-        height: 50px;
-        justify-content: flex-start;
-    }
-}
-
-// INTRO
-
-.intro {
-    align-items: flex-start;
-    color: black;
-    display: flex;
-    flex-direction: column;
-    font-size: 70px;
-    height: 100%;
-    justify-content: center;
-    left: 0;
-    line-height: 150%;
-    padding-left: 100px;
-    position: fixed;
-    top: 0;
-    transition: transform 0.3s ease-in;
-    width: 100%;
-
-    .line {
-        display: inline-block;
-        position: relative;
-        line-height: 115%;
-        margin-top: 30px;
-
-        &::before, &::after {
-            content: " ";
-            width: 100%;
-            height: 100%;
-            background-color: black;
-            top: 0;
-            right: 0;
-            position: absolute;
-        }
-
-        &::before {
-            background-color: black;
-        }
-
-        &::after {
-            background-color: white;
-        }
-    }
-
-    // black cover
-    .line:first-child::before {
-        transition: width 0.3s ease-in-out 0.4s;
-    }
-
-    .line:last-child::before {
-        transition: width 0.4s ease-in-out 0.5s;
-    }
-
-    // reveal (white cover)
-    .line:first-child::after {
-        transition: width 0.2s ease-in-out 0s;
-    }
-
-    .line:last-child::after {
-        transition: width 0.3s ease-in-out 0.1s;
-    }
-
-    &.enter, &.idle {
-        .line::before, .line::after {
-            width: 0;
-        }
-    }
-
-    &.idle {
-        transform: translate( 0, -100% );
-    }
-}
-
-// TWEETS
-
 ul {
     list-style: none;
     transition: transform 0.7s cubic-bezier( .59, 0, .29, .98 ) 0.2s;
@@ -121,61 +27,6 @@ ul.before, ul.enter {
     transform: translate3d( 0, 100%, 0 );
 }
 
-
-.tweet-container {
-    height: 100%;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 100%;
-}
-
-.tweet {
-    font-size: 60px;
-    height: 100%;
-    line-height: 135%;
-    width: 100%;
-    padding: 100px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-content: center;
-
-    a {
-        color: gray;
-        opacity: 0.8;
-        text-decoration: none;
-
-        &:hover {
-            background-color: gray;
-            color: white;
-        }
-    }
-
-    .reveal {
-        position: relative;
-        display: inline-block;
-
-        &::after {
-            content: " ";
-            background-color: black;
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            right: 0;
-            transition: width 0.2s ease-in-out;
-        }
-
-        &.idle::after {
-            width: 0;
-        }
-
-        &.delay-0::after { transition: width 0.2s ease-in-out 0.1s; }
-        &.delay-1::after { transition: width 0.2s ease-in-out 0.3s; }
-        &.delay-2::after { transition: width 0.2s ease-in-out 0.4s; }
-        &.delay-3::after { transition: width 0.2s ease-in-out 0.6s; }
-        &.delay-4::after { transition: width 0.2s ease-in-out 0.7s; }
-        &.delay-5::after { transition: width 0.2s ease-in-out 0.9s; }
-    }
-}
+@import "components/header.less";
+@import "components/intro.less";
+@import "components/tweet.less";
