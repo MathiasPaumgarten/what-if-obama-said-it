@@ -45,7 +45,7 @@ class App extends React.Component<{}, AppState> {
             <div className="container">
                 <ul className={ classnames( "tweet-container", this.state.uiState ) }>
                     { this.state.lines.map( ( tweet: ExtendedTweet, i: number ) => {
-                        return <Line text={ tweet.updatedText } handle={ tweet.handle } key={ i } />;
+                        return <Line tweet={ tweet } key={ i } />;
                     } ) }
                 </ul>
                 <Intro uiState={ this.state.uiState } />

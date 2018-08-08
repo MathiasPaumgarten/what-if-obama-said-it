@@ -1,9 +1,9 @@
 import * as classname from "classnames";
 import * as React from "react";
+import { ExtendedTweet } from "../../server/tracker";
 
 interface LineProps {
-    text: string;
-    handle: string;
+    tweet: ExtendedTweet;
 }
 
 interface LineState {
@@ -14,6 +14,7 @@ interface LineState {
 interface Fragment {
     type: "text" | "url" | "cover";
     value: string;
+    altValue?: string;
 }
 
 export class Line extends React.Component<LineProps, LineState> {
@@ -22,8 +23,8 @@ export class Line extends React.Component<LineProps, LineState> {
         super( props );
 
         this.state = {
-            fragments: this.disect( props.text ),
-            twitterLink: `https://twitter.com/${ props.handle }`,
+            fragments: this.disect( props.tweet.updatedText ),
+            twitterLink: `https://twitter.com/${ props.tweet.handle }/status/${ props.tweet.id_str }`,
         };
     }
 
@@ -31,7 +32,7 @@ export class Line extends React.Component<LineProps, LineState> {
         return (
             <li className="tweet">
                 <div className="handle">
-                    <a href={ this.state.twitterLink } target="_blank">@{ this.props.handle }</a>
+                    <a href={ this.state.twitterLink } target="_blank">@{ this.props.tweet.handle }</a>
                 </div>
                 <div className="tweet-text">
                     { this.state.fragments.map( ( fragment: Fragment, i: number ) => {
@@ -41,7 +42,10 @@ export class Line extends React.Component<LineProps, LineState> {
                             case "text":
                                 return <span key={ i }>{ fragment.value }</span>;
                             case "cover":
-                                return <RevealFragment key={ i } value={ fragment.value } delay={ i } />;
+                                return <RevealFragment key={ i }
+                                                       value={ fragment.value }
+                                                       beforeValue={ fragment.altValue! }
+                                                       delay={ i } />;
                         }
                     } ) }
                 </div>
@@ -50,7 +54,7 @@ export class Line extends React.Component<LineProps, LineState> {
     }
 
     /**
-     * Splites a string into several fragments by finding URLs. The array returned retains the order
+     * Splites a string into several fragments by finding URLs and key words. The array returned retains the order
      * of the string, separates in URLs and simple text.
      * @param value string to separate
      */
@@ -79,7 +83,7 @@ export class Line extends React.Component<LineProps, LineState> {
                 start = index;
             }
 
-            [ "Barack", "Obama" ].forEach( name => {
+            [ "Barack", "Obama" ].forEach( ( name: "Barack" | "Obama" ) => {
                 if ( value.substr( index, name.length ) === name ) {
                     if ( start !== index) {
                         fragments.push( {
@@ -91,6 +95,7 @@ export class Line extends React.Component<LineProps, LineState> {
                     fragments.push( {
                         type: "cover",
                         value: name,
+                        altValue: this.inverseName( name ),
                     } );
 
                     index += name.length;
@@ -110,33 +115,57 @@ export class Line extends React.Component<LineProps, LineState> {
 
         return fragments;
     }
+
+    private inverseName( name: "Barack" | "Obama" ): string {
+        return {
+            Barack: "Donald",
+            Obama: "Trump",
+        }[ name ];
+    }
 }
 
 interface RevealFramgmentProps {
+    beforeValue: string;
     value: string;
     delay: number;
 }
 
 interface RevealFragmentState {
-    uiState: "before" | "idle";
+    uiState: "before" | "cover" | "after";
+    showAlt: boolean;
 }
 
 export class RevealFragment extends React.Component<RevealFramgmentProps, RevealFragmentState> {
     constructor( props: RevealFramgmentProps ) {
         super( props );
-        this.state = { uiState: "before" };
+        this.state = {
+            uiState: "before",
+            showAlt: true,
+        };
     }
 
+    // TODO: timing the animation needs improvment
     componentDidMount() {
         setTimeout( () => {
-            this.setState( { uiState: "idle" } );
+            this.setState( { uiState: "cover" } );
+        }, 3000 );
+
+        setTimeout( () => {
+            this.setState( { uiState: "after", showAlt: false } );
         }, 4000 );
     }
 
     render(): JSX.Element {
         return (
             <span className={ classname( "reveal", "delay-" + this.props.delay, this.state.uiState ) }>
-                { this.props.value }
+                <span className="value-holder"
+                      style={ { opacity: this.state.showAlt ? 0 : 1 } }>
+                    { this.props.value }
+                </span>
+                <span className="alt-value-holder"
+                      style={ { opacity: this.state.showAlt ? 1 : 0 } }>
+                    { this.props.beforeValue }
+                </span>
             </span>
         );
     }
