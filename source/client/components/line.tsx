@@ -3,6 +3,12 @@ import * as React from "react";
 
 interface LineProps {
     text: string;
+    handle: string;
+}
+
+interface LineState {
+    fragments: Fragment[];
+    twitterLink: string;
 }
 
 interface Fragment {
@@ -10,12 +16,25 @@ interface Fragment {
     value: string;
 }
 
-export class Line extends React.Component<LineProps, {}> {
+export class Line extends React.Component<LineProps, LineState> {
+
+    constructor( props: LineProps ) {
+        super( props );
+
+        this.state = {
+            fragments: this.disect( props.text ),
+            twitterLink: `https://twitter.com/${ props.handle }`,
+        };
+    }
+
     render() {
         return (
             <li className="tweet">
+                <div className="handle">
+                    <a href={ this.state.twitterLink } target="_blank">@{ this.props.handle }</a>
+                </div>
                 <div className="tweet-text">
-                    { this.disect( this.props.text ).map( ( fragment: Fragment, i: number ) => {
+                    { this.state.fragments.map( ( fragment: Fragment, i: number ) => {
                         switch ( fragment.type ) {
                             case "url":
                                 return <a key={ i } href={ fragment.value } target="_blank">{ fragment.value }</a>;

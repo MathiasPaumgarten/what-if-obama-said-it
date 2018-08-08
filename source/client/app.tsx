@@ -2,12 +2,13 @@ import * as classnames from "classnames";
 import * as React from "react";
 import { render } from "react-dom";
 
+import { ExtendedTweet } from "../server/tracker";
 import { Header } from "./components/header";
 import { Intro } from "./components/intro";
 import { Line } from "./components/line";
 
 interface AppState {
-    lines: string[];
+    lines: ExtendedTweet[];
     uiState: "before" | "enter" | "idle";
 }
 
@@ -25,9 +26,9 @@ class App extends React.Component<{}, AppState> {
     }
 
     componentDidMount() {
-        fetch( "/api/list" )
+        fetch( "/api/tweets" )
             .then( ( response: Response ) => response.json() )
-            .then( ( lines: string[] ) => {
+            .then( ( lines: ExtendedTweet[] ) => {
                 this.setState( { lines } );
             } );
 
@@ -43,8 +44,8 @@ class App extends React.Component<{}, AppState> {
         return (
             <div className="container">
                 <ul className={ classnames( "tweet-container", this.state.uiState ) }>
-                    { this.state.lines.map( ( line: string, i: number ) => {
-                        return <Line text={ line } key={ i } />;
+                    { this.state.lines.map( ( tweet: ExtendedTweet, i: number ) => {
+                        return <Line text={ tweet.updatedText } handle={ tweet.handle } key={ i } />;
                     } ) }
                 </ul>
                 <Intro uiState={ this.state.uiState } />

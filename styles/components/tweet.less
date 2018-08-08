@@ -22,13 +22,22 @@
         padding: 20px;
     } );
 
+    .handle {
+        font-size: 50px;
+        color: @link-color;
+
+        .breakpoint( @small-size, {
+            font-size: 20px;
+        } );
+    }
+
     a {
-        color: gray;
+        color: @link-color;
         opacity: 0.8;
         text-decoration: none;
 
         &:hover {
-            background-color: gray;
+            background-color: @link-color;
             color: white;
         }
     }

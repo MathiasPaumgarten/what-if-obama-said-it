@@ -25,7 +25,13 @@ export class Aggregator {
     }
 
     getTweets(): ExtendedTweet[] {
-        return ([] as ExtendedTweet[]).concat( ...this.trackers.map( t => t.getTweets() ) );
+        return ([] as ExtendedTweet[])
+            .concat( ...this.trackers.map( t => t.getTweets() ) )
+            .sort( ( a, b ) => {
+                const aDate = new Date( a.created_at );
+                const bDate = new Date( b.created_at );
+                return aDate > bDate ? -1 : aDate < bDate ? 1 : 0;
+            } );
     }
 
     update() {
