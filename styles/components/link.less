@@ -1,0 +1,27 @@
+.link {
+    display: inline-block;
+    position: relative;
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .cover-container {
+        background-color: black;
+        color: white;
+        height: 100%;
+        left: 0;
+        overflow: hidden;
+        position: absolute;
+        top: 0;
+        transition: width 0.3s ease-in-out;
+        width: 0;
+    }
+
+    &:hover {
+        .cover-container {
+            width: 100%;
+        }
+    }
+}

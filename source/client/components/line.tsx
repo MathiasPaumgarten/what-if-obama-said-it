@@ -1,6 +1,7 @@
 import * as classname from "classnames";
 import * as React from "react";
 import { ExtendedTweet } from "../../server/tracker";
+import { Link } from "./link";
 
 interface LineProps {
     tweet: ExtendedTweet;
@@ -31,14 +32,11 @@ export class Line extends React.Component<LineProps, LineState> {
     render() {
         return (
             <li className="tweet">
-                <div className="handle">
-                    <a href={ this.state.twitterLink } target="_blank">@{ this.props.tweet.handle }</a>
-                </div>
                 <div className="tweet-text">
                     { this.state.fragments.map( ( fragment: Fragment, i: number ) => {
                         switch ( fragment.type ) {
                             case "url":
-                                return <a key={ i } href={ fragment.value } target="_blank">{ fragment.value }</a>;
+                                return <Link key={ i } href={ fragment.value } />;
                             case "text":
                                 return <span key={ i }>{ fragment.value }</span>;
                             case "cover":
