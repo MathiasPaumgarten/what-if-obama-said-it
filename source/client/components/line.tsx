@@ -1,10 +1,13 @@
 import * as classname from "classnames";
 import * as React from "react";
+
 import { ExtendedTweet } from "../../server/tracker";
+import { registerScrollCallback } from "../services/scroller";
 import { Link } from "./link";
 
 interface LineProps {
     tweet: ExtendedTweet;
+    index: number;
 }
 
 interface LineState {
@@ -25,7 +28,7 @@ export class Line extends React.Component<LineProps, LineState> {
 
         this.state = {
             fragments: this.disect( props.tweet.updatedText ),
-            twitterLink: `https://twitter.com/${ props.tweet.handle }/status/${ props.tweet.id_str }`,
+            twitterLink: `https://twitter.com/intent/tweet?text=${ props.tweet.updatedText }`,
         };
     }
 
@@ -36,16 +39,22 @@ export class Line extends React.Component<LineProps, LineState> {
                     { this.state.fragments.map( ( fragment: Fragment, i: number ) => {
                         switch ( fragment.type ) {
                             case "url":
-                                return <Link key={ i } href={ fragment.value } />;
+                                return null;
+                            //     return <Link key={ i } href={ fragment.value } />;
                             case "text":
                                 return <span key={ i }>{ fragment.value }</span>;
                             case "cover":
                                 return <RevealFragment key={ i }
                                                        value={ fragment.value }
                                                        beforeValue={ fragment.altValue! }
-                                                       delay={ i } />;
+                                                       delay={ i }
+                                                       index={ this.props.index } />;
                         }
                     } ) }
+                    <br />
+                    <span className="share">
+                        <Link href={ this.state.twitterLink } text="Tweet"/>
+                    </span>
                 </div>
             </li>
         );
@@ -126,6 +135,7 @@ interface RevealFramgmentProps {
     beforeValue: string;
     value: string;
     delay: number;
+    index: number;
 }
 
 interface RevealFragmentState {
@@ -142,15 +152,16 @@ export class RevealFragment extends React.Component<RevealFramgmentProps, Reveal
         };
     }
 
-    // TODO: timing the animation needs improvment
     componentDidMount() {
-        setTimeout( () => {
-            this.setState( { uiState: "cover" } );
-        }, 3000 );
+        const limit = this.props.index * window.innerHeight - window.innerHeight / 2;
 
-        setTimeout( () => {
-            this.setState( { uiState: "after", showAlt: false } );
-        }, 4000 );
+        registerScrollCallback( limit, () => {
+            this.setState( { uiState: "cover" } );
+
+            setTimeout( () => {
+                this.setState( { uiState: "after", showAlt: false } );
+            }, 1000 );
+        } );
     }
 
     render(): JSX.Element {
@@ -159,6 +170,7 @@ export class RevealFragment extends React.Component<RevealFramgmentProps, Reveal
                 <span className="value-holder"
                       style={ { opacity: this.state.showAlt ? 0 : 1 } }>
                     { this.props.value }
+                    { this.props.value === "Barack" ? <span>&nbsp;</span> : null }
                 </span>
                 <span className="alt-value-holder"
                       style={ { opacity: this.state.showAlt ? 1 : 0 } }>

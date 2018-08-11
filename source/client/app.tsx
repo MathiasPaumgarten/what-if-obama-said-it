@@ -6,6 +6,7 @@ import { ExtendedTweet } from "../server/tracker";
 import { Header } from "./components/header";
 import { Intro } from "./components/intro";
 import { Line } from "./components/line";
+import { enableScroller } from "./services/scroller";
 
 interface AppState {
     lines: ExtendedTweet[];
@@ -38,6 +39,8 @@ class App extends React.Component<{}, AppState> {
         } ).then( () => {
             this.setState( { uiState: "idle" } );
         } );
+
+        enableScroller();
     }
 
     render() {
@@ -45,10 +48,14 @@ class App extends React.Component<{}, AppState> {
             <div className="container">
                 <ul className={ classnames( "tweet-container", this.state.uiState ) }>
                     { this.state.lines.map( ( tweet: ExtendedTweet, i: number ) => {
-                        return <Line tweet={ tweet } key={ i } />;
+                        return <Line tweet={ tweet }
+                                     key={ i }
+                                     index={ i } />;
                     } ) }
                 </ul>
+
                 <Intro uiState={ this.state.uiState } />
+
                 <Header />
             </div>
         );
