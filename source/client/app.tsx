@@ -56,7 +56,7 @@ class App extends React.Component<{}, AppState> {
 
                 <Intro uiState={ this.state.uiState } />
 
-                <Header />
+                <Header uiState={ this.state.uiState } />
             </div>
         );
     }

@@ -14,10 +14,68 @@ header {
 
     .center {
         align-items: center;
-        border-bottom: 1px solid black;
         display: flex;
         flex-direction: row;
         height: 50px;
         justify-content: flex-start;
+        position: relative;
+
+        &::after {
+            content: " ";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width : 100%;
+            height: 1px;
+            background-color: black;
+            transition: width 0.7s ease-in-out 0.3s;
+        }
+    }
+
+    &.before {
+        .center::after {
+            width: 0;
+        }
+    }
+
+    .what-if {
+        display: inline-block;
+        position: relative;
+
+        &::before, &::after {
+            content: " ";
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            top: 0;
+            right: 0;
+            position: absolute;
+        }
+
+        &::before {
+            background-color: black;
+        }
+
+        &::after {
+            background-color: white;
+            outline: white;
+        }
+    }
+
+    // black cover
+    .what-if:first-child::before {
+        transition: width 0.3s ease-in-out 0.4s;
+    }
+
+
+    // reveal (white cover)
+    .what-if:first-child::after {
+        transition: width 0.2s ease-in-out 0s;
+    }
+
+    &.enter, &.idle {
+        .what-if::before, .what-if::after {
+            width: 0;
+        }
     }
 }
