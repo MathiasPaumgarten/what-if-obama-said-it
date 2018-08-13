@@ -1,4 +1,5 @@
 import * as classname from "classnames";
+import { debounce } from "lodash";
 import * as React from "react";
 
 import { ExtendedTweet } from "../../server/tracker";
@@ -155,11 +156,11 @@ export class RevealFragment extends React.Component<RevealFramgmentProps, Reveal
     }
 
     componentDidMount() {
-        const limit = this.props.index * window.innerHeight - window.innerHeight / 2;
+        const limit = ( this.props.index - 0.5 ) * window.innerHeight;
 
         this.scrollerRef = registerScrollCallback( limit, () => this.onInView() );
 
-        window.addEventListener( "resize", () => this.onResize() );
+        window.addEventListener( "resize", debounce( () => this.onResize(), 200 ) );
     }
 
     render(): JSX.Element {
@@ -187,6 +188,6 @@ export class RevealFragment extends React.Component<RevealFramgmentProps, Reveal
     }
 
     private onResize() {
-        this.scrollerRef!.update( this.props.index * window.innerHeight - window.innerHeight / 2 );
+        this.scrollerRef!.update( ( this.props.index - 0.5 ) *  window.innerHeight );
     }
 }

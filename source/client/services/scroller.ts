@@ -7,7 +7,7 @@ function sort() {
     callbacks.sort( ( a, b ) => a.limit - b.limit );
 }
 
-const check = throttle(() => {
+function check() {
     // tslint:disable-next-line Linter prefers for-of loop which are slightly slower. And this whole thing is already
     // janky as is.
     for ( let i = 0; i < callbacks.length; i++ ) {
@@ -19,7 +19,9 @@ const check = throttle(() => {
     }
 
     offset = Math.abs( window.scrollY );
-}, 100 );
+
+    setTimeout( check, 100 );
+}
 
 export class ScrollerRef {
     constructor( public limit: number, readonly callback: () => void ) {}
