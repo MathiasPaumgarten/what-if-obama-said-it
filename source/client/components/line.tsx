@@ -2,7 +2,7 @@ import * as classname from "classnames";
 import * as React from "react";
 
 import { ExtendedTweet } from "../../server/tracker";
-import { registerScrollCallback } from "../services/scroller";
+import { registerScrollCallback, ScrollerRef } from "../services/scroller";
 import { Link } from "./link";
 
 interface LineProps {
@@ -144,6 +144,8 @@ interface RevealFragmentState {
 }
 
 export class RevealFragment extends React.Component<RevealFramgmentProps, RevealFragmentState> {
+    private scrollerRef?: ScrollerRef;
+
     constructor( props: RevealFramgmentProps ) {
         super( props );
         this.state = {
@@ -155,13 +157,9 @@ export class RevealFragment extends React.Component<RevealFramgmentProps, Reveal
     componentDidMount() {
         const limit = this.props.index * window.innerHeight - window.innerHeight / 2;
 
-        registerScrollCallback( limit, () => {
-            this.setState( { uiState: "cover" } );
+        this.scrollerRef = registerScrollCallback( limit, () => this.onInView() );
 
-            setTimeout( () => {
-                this.setState( { uiState: "after", showAlt: false } );
-            }, 1000 );
-        } );
+        window.addEventListener( "resize", () => this.onResize() );
     }
 
     render(): JSX.Element {
@@ -178,5 +176,17 @@ export class RevealFragment extends React.Component<RevealFramgmentProps, Reveal
                 </span>
             </span>
         );
+    }
+
+    private onInView() {
+        this.setState( { uiState: "cover" } );
+
+        setTimeout( () => {
+            this.setState( { uiState: "after", showAlt: false } );
+        }, 1000 );
+    }
+
+    private onResize() {
+        this.scrollerRef!.update( this.props.index * window.innerHeight - window.innerHeight / 2 );
     }
 }

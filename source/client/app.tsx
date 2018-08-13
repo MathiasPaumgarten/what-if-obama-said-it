@@ -38,9 +38,9 @@ class App extends React.Component<{}, AppState> {
             return this.waitSeconds( 2 );
         } ).then( () => {
             this.setState( { uiState: "idle" } );
+            enableScroller();
         } );
 
-        enableScroller();
     }
 
     render() {
