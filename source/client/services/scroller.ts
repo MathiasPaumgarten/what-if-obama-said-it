@@ -1,7 +1,6 @@
 import { throttle } from "lodash";
 
 const callbacks: Array<{ limit: number, callback: () => void }> = [];
-let offset = 0;
 
 function sort() {
     callbacks.sort( ( a, b ) => a.limit - b.limit );
@@ -10,6 +9,11 @@ function sort() {
 const check = throttle(() => {
     // tslint:disable-next-line Linter prefers for-of loop which are slightly slower. And this whole thing is already
     // janky as is.
+
+    const offset = Math.abs( window.scrollY );
+
+    console.log(window.scrollY);
+
     for ( let i = 0; i < callbacks.length; i++ ) {
         if ( callbacks[ i ].limit < offset ) {
             callbacks[ i ].callback();
@@ -18,7 +22,6 @@ const check = throttle(() => {
         } else break;
     }
 
-    offset = Math.abs( window.scrollY );
 }, 100 );
 
 export class ScrollerRef {

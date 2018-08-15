@@ -13,6 +13,7 @@ interface LineProps {
 interface LineState {
     fragments: Fragment[];
     twitterLink: string;
+    sourceLink?: Fragment;
 }
 
 interface Fragment {
@@ -26,9 +27,13 @@ export class Line extends React.Component<LineProps, LineState> {
     constructor( props: LineProps ) {
         super( props );
 
+        const fragments: Fragment[] = this.disect( props.tweet.updatedText );
+        const reTweet = `What if it said:%0A%0A${ props.tweet.updatedText }`;
+
         this.state = {
-            fragments: this.disect( props.tweet.updatedText ),
-            twitterLink: `https://twitter.com/intent/tweet?text=${ props.tweet.updatedText }`,
+            fragments,
+            twitterLink: `https://twitter.com/intent/tweet?text=${ reTweet }`,
+            sourceLink: fragments.find( ( fragment: Fragment ) => fragment.type === "url" ),
         };
     }
 
@@ -40,7 +45,6 @@ export class Line extends React.Component<LineProps, LineState> {
                         switch ( fragment.type ) {
                             case "url":
                                 return null;
-                            //     return <Link key={ i } href={ fragment.value } />;
                             case "text":
                                 return <span key={ i }>{ fragment.value }</span>;
                             case "cover":
@@ -52,8 +56,15 @@ export class Line extends React.Component<LineProps, LineState> {
                         }
                     } ) }
                     <br />
-                    <span className="share">
-                        <Link href={ this.state.twitterLink } text="Tweet"/>
+                    <span className="cta">
+                        {
+                            this.state.sourceLink ?
+                                <Link href={ this.state.sourceLink.value } text="Source"/> :
+                                null
+                        }
+                    </span>
+                    <span className="cta">
+                        <Link href={ this.state.twitterLink } text="Re-Tweet"/>
                     </span>
                 </div>
             </li>
@@ -144,7 +155,6 @@ interface RevealFragmentState {
 }
 
 export class RevealFragment extends React.Component<RevealFramgmentProps, RevealFragmentState> {
-    private scrollerRef?: ScrollerRef;
 
     constructor( props: RevealFramgmentProps ) {
         super( props );
@@ -156,10 +166,7 @@ export class RevealFragment extends React.Component<RevealFramgmentProps, Reveal
 
     componentDidMount() {
         const limit = this.props.index * window.innerHeight - window.innerHeight / 2;
-
-        this.scrollerRef = registerScrollCallback( limit, () => this.onInView() );
-
-        window.addEventListener( "resize", () => this.onResize() );
+        registerScrollCallback( limit, () => this.onInView() );
     }
 
     render(): JSX.Element {
@@ -184,9 +191,5 @@ export class RevealFragment extends React.Component<RevealFramgmentProps, Reveal
         setTimeout( () => {
             this.setState( { uiState: "after", showAlt: false } );
         }, 1000 );
-    }
-
-    private onResize() {
-        this.scrollerRef!.update( this.props.index * window.innerHeight - window.innerHeight / 2 );
     }
 }
