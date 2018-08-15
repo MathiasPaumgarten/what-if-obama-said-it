@@ -6,6 +6,7 @@ import { ExtendedTweet } from "../server/tracker";
 import { Header } from "./components/header";
 import { Intro } from "./components/intro";
 import { Line } from "./components/line";
+import { RotationCover } from "./components/rotation-cover";
 import { enableScroller } from "./services/scroller";
 
 interface AppState {
@@ -57,6 +58,8 @@ class App extends React.Component<{}, AppState> {
                 <Intro uiState={ this.state.uiState } />
 
                 <Header uiState={ this.state.uiState } />
+
+                <RotationCover />
             </div>
         );
     }
