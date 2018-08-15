@@ -7,12 +7,7 @@ function sort() {
 }
 
 const check = throttle(() => {
-    // tslint:disable-next-line Linter prefers for-of loop which are slightly slower. And this whole thing is already
-    // janky as is.
-
     const offset = Math.abs( window.scrollY );
-
-    console.log(window.scrollY);
 
     for ( let i = 0; i < callbacks.length; i++ ) {
         if ( callbacks[ i ].limit < offset ) {
