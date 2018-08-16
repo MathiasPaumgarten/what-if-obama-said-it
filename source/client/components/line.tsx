@@ -13,7 +13,7 @@ interface LineProps {
 interface LineState {
     fragments: Fragment[];
     twitterLink: string;
-    sourceLink?: Fragment;
+    sourceLink?: string;
 }
 
 interface Fragment {
@@ -29,11 +29,13 @@ export class Line extends React.Component<LineProps, LineState> {
 
         const fragments: Fragment[] = this.disect( props.tweet.updatedText );
         const reTweet = `What if it said:%0A%0A${ props.tweet.updatedText }`;
+        const linkFragment = fragments.find( ( fragment: Fragment ) => fragment.type === "url" );
+        const source = linkFragment ? linkFragment.value : "";
 
         this.state = {
             fragments,
             twitterLink: `https://twitter.com/intent/tweet?text=${ reTweet }`,
-            sourceLink: fragments.find( ( fragment: Fragment ) => fragment.type === "url" ),
+            sourceLink: source,
         };
     }
 
@@ -41,28 +43,23 @@ export class Line extends React.Component<LineProps, LineState> {
         return (
             <li className="tweet">
                 <div className="tweet-text">
-                    { this.state.fragments.map( ( fragment: Fragment, i: number ) => {
-                        switch ( fragment.type ) {
-                            case "url":
-                                return null;
-                            case "text":
-                                return <span key={ i }>{ fragment.value }</span>;
-                            case "cover":
-                                return <RevealFragment key={ i }
-                                                       value={ fragment.value }
-                                                       beforeValue={ fragment.altValue! }
-                                                       delay={ i }
-                                                       index={ this.props.index } />;
-                        }
-                    } ) }
+                    <a href={ this.state.sourceLink } className="source-link">
+                        { this.state.fragments.map( ( fragment: Fragment, i: number ) => {
+                            switch ( fragment.type ) {
+                                case "url":
+                                    return null;
+                                case "text":
+                                    return <span key={ i }>{ fragment.value }</span>;
+                                case "cover":
+                                    return <RevealFragment key={ i }
+                                                           value={ fragment.value }
+                                                           beforeValue={ fragment.altValue! }
+                                                           delay={ i }
+                                                           index={ this.props.index } />;
+                            }
+                        } ) }
+                    </a>
                     <br />
-                    <span className="cta">
-                        {
-                            this.state.sourceLink ?
-                                <Link href={ this.state.sourceLink.value } text="Source"/> :
-                                null
-                        }
-                    </span>
                     <span className="cta">
                         <Link href={ this.state.twitterLink } text="Re-Tweet"/>
                     </span>
