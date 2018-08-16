@@ -61,7 +61,7 @@ export class Line extends React.Component<LineProps, LineState> {
                     </a>
                     <br />
                     <span className="cta">
-                        <Link href={ this.state.twitterLink } text="Re-Tweet"/>
+                        <Link href={ this.state.twitterLink } icon="fas fa-retweet" text="Re-Tweet"/>
                     </span>
                 </div>
             </li>
@@ -83,7 +83,7 @@ export class Line extends React.Component<LineProps, LineState> {
             if ( value.substr( index, 4 ) === "http" ) {
                 fragments.push( {
                     type: "text",
-                    value: value.substring( start, index ),
+                    value: value.substring( start, index ).replace( /&amp;/g, "&" ),
                 } );
 
                 const urlStart = index++;

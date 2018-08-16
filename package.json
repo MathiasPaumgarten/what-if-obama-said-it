@@ -5,11 +5,12 @@
     "description": "Retweet headlines with Obama as the subject over Trump",
     "scripts": {
         "build": "tsc",
-        "dev": "concurrently \"tsc -w\" \"watchify dist/client/app.js -o dist/client/bundle.js\" \"npm run less\" \"npm run server\"",
+        "dev": "concurrently \"tsc -w\" \"watchify dist/client/app.js -o dist/client/bundle.js\" \"npm run less\" \"npm run server\" \"npm run assets\"",
         "server": "npm run build && node dist/server/index.js --fixtures",
         "start": "node dist/server/index.js",
         "less": "autoless styles/ dist/client/",
-        "clean": "rm -rf dist"
+        "clean": "rm -rf dist",
+        "assets": "cp -r assets dist/client/assets"
     },
     "devDependencies": {
         "@types/classnames": "^2.2.6",
