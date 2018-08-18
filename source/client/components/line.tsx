@@ -1,9 +1,8 @@
 import * as classname from "classnames";
-import { debounce } from "lodash";
 import * as React from "react";
 
 import { ExtendedTweet } from "../../server/tracker";
-import { registerScrollCallback, ScrollerRef } from "../services/scroller";
+import { registerScrollCallback } from "../services/scroller";
 import { Link } from "./link";
 
 interface LineProps {
@@ -35,7 +34,7 @@ export class Line extends React.Component<LineProps, LineState> {
 
         this.state = {
             fragments,
-            twitterLink: `https://twitter.com/intent/tweet?text=${ reTweet }`,
+            twitterLink: `https://twitter.com/intent/tweet?text=${ reTweet }&via=whatifitwasobam`,
             sourceLink: source,
         };
     }
