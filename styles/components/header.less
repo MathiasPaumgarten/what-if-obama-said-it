@@ -17,7 +17,7 @@ header {
         display: flex;
         flex-direction: row;
         height: 50px;
-        justify-content: flex-start;
+        justify-content: space-between;
         position: relative;
 
         &::after {
@@ -32,9 +32,17 @@ header {
         }
     }
 
+    .twitter-wrapper {
+        transition: opacity 1s 1s;
+    }
+
     &.before {
         .center::after {
             width: 0;
+        }
+
+        .twitter-wrapper {
+            opacity: 0;
         }
     }
 
@@ -78,4 +86,6 @@ header {
             width: 0;
         }
     }
+
+
 }
