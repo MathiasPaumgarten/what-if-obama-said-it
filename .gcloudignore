@@ -6,3 +6,5 @@ source
 *.js.map
 styles/
 fixtures/
+dist/client/components
+dist/client/services

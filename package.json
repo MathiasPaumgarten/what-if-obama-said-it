@@ -10,7 +10,9 @@
         "start": "node dist/server/index.js",
         "less": "autoless styles/ dist/client/",
         "clean": "rm -rf dist",
-        "assets": "cp -r assets dist/client/assets"
+        "assets": "cp -r assets dist/client/assets",
+        "minify": "uglifyjs dist/client/bundle.js -o dist/client/bundle.js",
+        "deploy": "npm run minify && gcloud app deploy --project=what-if-obama-said-it"
     },
     "devDependencies": {
         "@types/classnames": "^2.2.6",
@@ -28,6 +30,7 @@
         "react-dom": "^16.4.1",
         "tslint": "^5.11.0",
         "typescript": "^2.9.2",
+        "uglifyjs": "^2.4.11",
         "watchify": "^3.11.0"
     },
     "dependencies": {
