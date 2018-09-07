@@ -43,7 +43,7 @@ export class Line extends React.Component<LineProps, LineState> {
         return (
             <li className="tweet">
                 <div className="tweet-text">
-                    <a href={ this.state.sourceLink } className="source-link">
+                    <a href={ this.state.sourceLink } target="_blank" className="source-link">
                         { this.state.fragments.map( ( fragment: Fragment, i: number ) => {
                             switch ( fragment.type ) {
                                 case "url":

@@ -9,6 +9,7 @@ export class Aggregator {
     private trackers: Tracker[];
     private timeout: NodeJS.Timer;
     private readonly SIZE = 30;
+    private readonly EXPORT_SIZE = 50;
 
     constructor( handles: string[], private updateTime: number, useFixtures = false ) {
         this.trackers = handles.map( ( handle: string ) => {
@@ -21,7 +22,9 @@ export class Aggregator {
     }
 
     getLines(): string[] {
-        return ([] as string[]).concat( ...this.trackers.map( t => t.getLines() ) );
+        return ([] as string[])
+            .concat( ...this.trackers.map( t => t.getLines() ) )
+            .slice(0, this.EXPORT_SIZE);
     }
 
     getTweets(): ExtendedTweet[] {
@@ -31,7 +34,8 @@ export class Aggregator {
                 const aDate = new Date( a.created_at );
                 const bDate = new Date( b.created_at );
                 return aDate > bDate ? -1 : aDate < bDate ? 1 : 0;
-            } );
+            } )
+            .slice(0, this.EXPORT_SIZE);
     }
 
     update() {
