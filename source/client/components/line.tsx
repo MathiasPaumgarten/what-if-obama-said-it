@@ -28,7 +28,7 @@ export class Line extends React.Component<LineProps, LineState> {
         super( props );
 
         const fragments: Fragment[] = this.disect( props.tweet.updatedText );
-        const reTweet = `What if it said:%0A%0A${ props.tweet.updatedText }`;
+        const reTweet = props.tweet.updatedText;
         const linkFragment = fragments.find( ( fragment: Fragment ) => fragment.type === "url" );
         const source = linkFragment ? linkFragment.value : "";
 
