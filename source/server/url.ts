@@ -1,42 +1,75 @@
-import * as Datastore from "@google-cloud/datastore";
+import Datastore = require( "@google-cloud/datastore" );
 
 const kind = "Url";
 const ds = new Datastore( {
     projectId: "what-if-obama-said-it",
 } );
 
+export interface UrlPair {
+    url: string;
+    id: string;
+}
 
-export function list( callback: ( urls: object[] ) => void ) {
-    const query = ds.createQuery( kind );
+interface DatestoreEntity {
+    url: string;
+    [Datastore.KEY]: {
+        id: string;
+    };
+}
 
-    ds.runQuery( query, ( error, entities ) => {
-        if ( error ) {
-            console.log( error );
-            return;
-        }
+export function listUrls(): Promise<UrlPair[]> {
+    return new Promise<UrlPair[]>( ( resolve, reject ) => {
+        const query = ds.createQuery( kind );
 
-        callback( entities );
+        ds.runQuery( query, ( error: Error | null, entities: DatestoreEntity[] ) => {
+            if ( error ) {
+                reject( error );
+                return;
+            }
+
+            const urls = entities.map<UrlPair>( ( entity: DatestoreEntity ) => ( {
+                url: entity.url,
+                id: entity[Datastore.KEY].id,
+            } ) );
+
+            resolve( urls );
+        } );
     } );
 }
 
-export function create( id: string, url: string ) {
+export function getUrl( id: string ): Promise<UrlPair> {
+    return new Promise<UrlPair>( (resolve, reject) => {
+        const key = ds.key( [ kind, parseInt( id, 10 ) ] );
 
-    const key = ds.key( [ kind ] );
-    const entity = {
-        key,
-        data: [
-            {
-                name: "url",
-                value: url,
-            },
-            {
-                name: "short",
-                value: id,
-            },
-        ],
-    };
+        ds.get( key, ( error: Error | null, entity: DatestoreEntity ) => {
+            if ( error ) {
+                reject( error );
+                return;
+            }
 
-    ds.save( entity, ( error ) =>  {
+            resolve( {
+                url: entity.url,
+                id: entity[Datastore.KEY].id,
+            } );
+        } );
+    } );
+}
 
+export function createUrl( url: string ): Promise<void> {
+    return new Promise( resolve => {
+        const key = ds.key( [ kind ] );
+        const entity = {
+            key,
+            data: [
+                {
+                    name: "url",
+                    value: url,
+                },
+            ],
+        };
+
+        ds.save( entity, ( error ) =>  {
+            resolve();
+        } );
     } );
 }

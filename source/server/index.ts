@@ -1,9 +1,11 @@
+import * as bodyParser from "body-parser";
 import * as express from "express";
 import * as session from "express-session";
 import * as passport from "passport";
 
 import { Aggregator } from "./aggregator";
 import { AUTH_CALLBACK, AUTH_LOGIN, authRequired, SESSION_SECRET, strategy } from "./auth";
+import { createUrl, getUrl, listUrls } from "./url";
 
 const SESSION_CONFIG: session.SessionOptions = {
     secret: SESSION_SECRET,
@@ -44,6 +46,7 @@ app.set( "view engine", "pug" );
 app.set( "views", process.cwd() + "/views" );
 app.set( "trust proxy", true );
 
+app.use( bodyParser.urlencoded( { extended: true } ) );
 app.use( session( SESSION_CONFIG ) );
 app.use( passport.initialize() );
 app.use( passport.session() );
@@ -63,7 +66,19 @@ app.get( "/", ( _, response: express.Response ) => {
 } );
 
 app.get( "/url", authRequired, ( _, response: express.Response ) => {
-    response.render( "url" );
+    listUrls().then( urls => {
+        response.render( "url", { urls } );
+    } );
+} );
+
+app.get( "/url/:id", ( request: express.Request, response: express.Response ) => {
+    getUrl( request.params.id ).then( url => {
+        response.send( url.url );
+    } );
+} );
+
+app.post( "/url/create", authRequired, ( request: express.Request, response: express.Response ) => {
+    createUrl( request.body.url ).then( () => response.redirect( "/url" ) );
 } );
 
 

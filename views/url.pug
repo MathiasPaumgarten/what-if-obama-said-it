@@ -1,6 +1,19 @@
 extends base.pug
 
 block content
-    ul
-        li Foo
-        li Bar
+    div.admin-panel
+        h2 URLs
+
+        ul
+            each value in urls
+                li
+                    a( href=value.url )= value.url
+                    span.arrow →
+                    span http://whatifitwasobama.com/url/#{ value.id }
+                    span.copy copy
+
+        h2 Add Url
+
+        form( action="/url/create" method="POST" )
+            input( name="url" id="url" placeholder="url" value="sock" )
+            button( type="submit" ) Save
