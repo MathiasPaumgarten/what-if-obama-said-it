@@ -3,17 +3,33 @@ extends base.pug
 block content
     div.admin-panel
         h2 URLs
-
         ul
             each value in urls
                 li
                     a( href=value.url )= value.url
                     span.arrow →
                     span http://whatifitwasobama.com/url/#{ value.id }
-                    span.copy copy
+                    span.copy( onclick=`copy( '${ value.id }' )` ) copy
 
         h2 Add Url
 
         form( action="/url/create" method="POST" )
             input( name="url" id="url" placeholder="url" value="sock" )
             button( type="submit" ) Save
+
+        script.
+            function copy( id ) {
+                const string = "http://whatifitwasobama.com/url/" + id;
+                const el = document.createElement( "textarea" );
+
+                el.value = string;
+                el.setAttribute("readonly", "" );
+                el.style.position = "absolute";
+                el.style.left = "-9999px";
+
+                document.body.appendChild( el );
+                el.select();
+
+                document.execCommand( "copy" );
+                document.body.removeChild( el );
+            };

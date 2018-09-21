@@ -4,7 +4,7 @@ import * as session from "express-session";
 import * as passport from "passport";
 
 import { Aggregator } from "./aggregator";
-import { AUTH_CALLBACK, AUTH_LOGIN, authRequired, SESSION_SECRET, strategy } from "./auth";
+import { AUTH_CALLBACK, AUTH_LOGIN, authRequired, INVALID_USER, SESSION_SECRET, strategy } from "./auth";
 import { createUrl, getUrl, listUrls } from "./url";
 
 const SESSION_CONFIG: session.SessionOptions = {
@@ -57,7 +57,7 @@ passport.serializeUser( ( user, callback ) => callback( null, user ) );
 passport.deserializeUser( ( object, callback ) => callback( null, object ) );
 
 
-// CLIENT FACING URLs
+// CLIENT FACING URLS
 //
 // Hosts the user facing website and all routes related to such.
 
@@ -73,7 +73,7 @@ app.get( "/url", authRequired, ( _, response: express.Response ) => {
 
 app.get( "/url/:id", ( request: express.Request, response: express.Response ) => {
     getUrl( request.params.id ).then( url => {
-        response.send( url.url );
+        response.send( `<script> window.location = "${ url.url }" </script>` );
     } );
 } );
 
@@ -121,5 +121,9 @@ app.get(
         response.redirect( redirect );
     },
 );
+
+app.get( INVALID_USER, ( _, response: express.Response ) => {
+    response.render( "invalid" );
+} );
 
 app.listen( process.env.PORT || 1234 );
