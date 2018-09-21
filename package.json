@@ -38,6 +38,7 @@
         "watchify": "^3.11.0"
     },
     "dependencies": {
+        "@google-cloud/connect-datastore": "^1.0.0",
         "@google-cloud/datastore": "^1.4.2",
         "body-parser": "^1.18.3",
         "express": "^4.16.3",

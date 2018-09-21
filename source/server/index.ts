@@ -7,6 +7,11 @@ import { Aggregator } from "./aggregator";
 import { AUTH_CALLBACK, AUTH_LOGIN, authRequired, INVALID_USER, SESSION_SECRET, strategy } from "./auth";
 import { createUrl, getUrl, listUrls } from "./url";
 
+// @ts-ignore
+import DatastoreStoreFactory = require( "@google-cloud/connect-datastore" );
+import Datastore = require( "@google-cloud/datastore" );
+
+const DatastoreStore = DatastoreStoreFactory( session );
 const SESSION_CONFIG: session.SessionOptions = {
     secret: SESSION_SECRET,
     resave: false,
@@ -15,6 +20,16 @@ const SESSION_CONFIG: session.SessionOptions = {
         secure: false,
     },
 };
+
+if ( process.env.NODE_ENV === "production" ) {
+    SESSION_CONFIG.store = new DatastoreStore( {
+        dataset: new Datastore( {
+            prefix: "express-session",
+            projectId: "what-if-obama-said-it" || process.env.GCLOUD_PROJECT,
+            keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+        } ),
+    } );
+}
 
 const USE_FIXTURES = process.argv.indexOf( "-fixtures" ) > -1 || process.argv.indexOf( "--fixtures" ) > -1;
 const ONE_HOUR = 1000 * 60 * 60;
@@ -37,6 +52,7 @@ const handles = [
     "AP",
 ];
 
+
 const app = express();
 const aggregator = new Aggregator( handles, ONE_HOUR, USE_FIXTURES );
 
@@ -46,8 +62,10 @@ app.set( "view engine", "pug" );
 app.set( "views", process.cwd() + "/views" );
 app.set( "trust proxy", true );
 
-app.use( bodyParser.urlencoded( { extended: true } ) );
+
+
 app.use( session( SESSION_CONFIG ) );
+app.use( bodyParser.urlencoded( { extended: true } ) );
 app.use( passport.initialize() );
 app.use( passport.session() );
 app.use( express.static( "dist/client" ) );
