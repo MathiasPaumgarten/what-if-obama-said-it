@@ -24,7 +24,6 @@ const SESSION_CONFIG: session.SessionOptions = {
 if ( process.env.NODE_ENV === "production" ) {
     SESSION_CONFIG.store = new DatastoreStore( {
         dataset: new Datastore( {
-            prefix: "express-session",
             projectId: "what-if-obama-said-it" || process.env.GCLOUD_PROJECT,
             keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
         } ),
