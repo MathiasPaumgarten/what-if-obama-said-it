@@ -7,11 +7,13 @@ const ds = new Datastore( {
 
 export interface UrlPair {
     url: string;
+    created: number;
     id: string;
 }
 
 interface DatestoreEntity {
     url: string;
+    created: number;
     [Datastore.KEY]: {
         id: string;
     };
@@ -29,10 +31,11 @@ export function listUrls(): Promise<UrlPair[]> {
 
             const urls = entities.map<UrlPair>( ( entity: DatestoreEntity ) => ( {
                 url: entity.url,
+                created: entity.created || 0,
                 id: entity[Datastore.KEY].id,
             } ) );
 
-            resolve( urls );
+            resolve( urls.sort( ( a, b ) => a.created - b.created ) );
         } );
     } );
 }
@@ -48,6 +51,7 @@ export function getUrl( id: string ): Promise<UrlPair> {
             }
 
             resolve( {
+                created: entity.created,
                 url: entity.url,
                 id: entity[Datastore.KEY].id,
             } );
@@ -64,6 +68,10 @@ export function createUrl( url: string ): Promise<void> {
                 {
                     name: "url",
                     value: url,
+                },
+                {
+                    name: "created",
+                    value: Date.now(),
                 },
             ],
         };

@@ -61,8 +61,6 @@ app.set( "view engine", "pug" );
 app.set( "views", process.cwd() + "/views" );
 app.set( "trust proxy", true );
 
-
-
 app.use( session( SESSION_CONFIG ) );
 app.use( bodyParser.urlencoded( { extended: true } ) );
 app.use( passport.initialize() );

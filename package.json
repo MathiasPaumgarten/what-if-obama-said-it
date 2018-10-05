@@ -4,14 +4,15 @@
     "version": "0.0.1",
     "description": "Retweet headlines with Obama as the subject over Trump",
     "scripts": {
-        "dev": "concurrently \"tsc -w\" \"watchify dist/client/app.js -o dist/client/bundle.js\" \"npm run less\" \"npm run server\" \"npm run assets\"",
+        "dev": "concurrently \"tsc -w\" \"watchify dist/client/app.js -o dist/client/bundle.js\" \"npm run less\" \"npm run server\" \"npm run assets\" \"npm run datastore\"",
         "server": "tsc && nodemon dist/server/index.js --fixtures",
         "start": "node dist/server/index.js",
         "less": "autoless styles/ dist/client/",
         "clean": "rm -rf dist",
         "assets": "cp -r assets dist/client/assets",
         "minify": "uglifyjs dist/client/bundle.js -o dist/client/bundle.js",
-        "deploy": "npm run minify && gcloud app deploy --project=what-if-obama-said-it"
+        "deploy": "npm run minify && gcloud app deploy --project=what-if-obama-said-it",
+        "datastore": "gcloud beta emulators datastore env-init > set_vars.cmd && set_vars.cmd && rm set_vars.cmd && gcloud beta emulators datastore start"
     },
     "devDependencies": {
         "@types/classnames": "^2.2.6",
